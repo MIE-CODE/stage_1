@@ -16,7 +16,7 @@ app.use((req, res, next) => {
         .replace(/%20/g, "_");
     }
   }
-  console.log(query);
+
   next();
 });
 
