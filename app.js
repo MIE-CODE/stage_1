@@ -6,6 +6,20 @@ const app = express();
 const port = 5050;
 app.use(cors("*"));
 
+// middleware to modify response
+app.use((req, res, next) => {
+  const query = req.query;
+  for (let param in query) {
+    if (query.hasOwnProperty(param)) {
+      query[param] = decodeURIComponent(query[param])
+        .replace(/"/g, "")
+        .replace(/%20/g, "_");
+    }
+  }
+  console.log(query);
+  next();
+});
+
 // get ip address
 const getLocalIpAddress = () => {
   const interfaces = os.networkInterfaces();
