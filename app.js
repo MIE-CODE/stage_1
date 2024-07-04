@@ -20,6 +20,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/", (req, res) => {
+  res.send({ "GO TO": "/api" });
+});
+
 app.get("/api/hello", async (req, res) => {
   const { visitor_name } = req.query;
   try {
