@@ -1,6 +1,6 @@
 const express = require("express");
+const axios = require("axios");
 const cors = require("cors");
-const os = require("os");
 
 const app = express();
 const port = 5050;
@@ -20,23 +20,22 @@ app.use((req, res, next) => {
   next();
 });
 
-// get ip address
-const getLocalIpAddress = () => {
-  const interfaces = os.networkInterfaces();
-  for (const name of Object.keys(interfaces)) {
-    for (const net of interfaces[name]) {
-      if (net.family === "IPv4" && !net.internal) {
-        return net.address;
-      }
-    }
-  }
-  return "IP address not found";
-};
-
-app.get("/api/hello", (req, res) => {
-  const ip = getLocalIpAddress();
+app.get("/api/hello", async (req, res) => {
   const { visitor_name } = req.query;
-  res.send({ client_ip: ip, greeting: `Hello ${visitor_name}!` });
+  try {
+    const response = await axios.get(
+      `https://ipinfo.io/json?token=1ace4c41de19a3`
+    );
+    const location = response.data;
+
+    res.send({
+      client_ip: location.ip,
+      location: location.country,
+      greeting: `Hello ${visitor_name}!, The temperature is 11 degrees Celcius in ${location.country}`,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching location data" });
+  }
 });
 
 app.listen(port, () => {
