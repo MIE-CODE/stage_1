@@ -35,8 +35,6 @@ app.get("/api/hello", async (req, res) => {
 
   console.log("Client IP:", clientIP);
 
-  console.log(clientIP);
-
   try {
     const response = await axios.get(
       `https://ipinfo.io/json?token=1ace4c41de19a3`
@@ -44,7 +42,7 @@ app.get("/api/hello", async (req, res) => {
     const location = response.data;
 
     const main_response = await axios.get(`http://ip-api.com/json/${clientIP}`);
-    const { lat, lon, country, city } = main_response.data;
+    const { lat, lon, country } = main_response.data;
 
     const weatherApiKey = "9f66f92b6d8a484ba284d271d09bd0f5";
 
@@ -56,7 +54,7 @@ app.get("/api/hello", async (req, res) => {
     res.send({
       client_ip: location.ip,
       location: country,
-      greeting: `Hello ${visitor_name}!, The temperature is ${temperature} degrees Celcius in ${city}`,
+      greeting: `Hello ${visitor_name}!, The temperature is ${temperature} degrees Celcius in ${country}`,
     });
   } catch (error) {
     // console.error("Error fetching location or weather data:", error);
