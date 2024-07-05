@@ -27,13 +27,26 @@ app.get("/api/hello", async (req, res) => {
     );
     const location = response.data;
 
+    const main_response = await axios.get(
+      `http://ip-api.com/json/${location.ip}`
+    );
+    const { lat, lon, country, city } = main_response.data;
+
+    const weatherApiKey = "9f66f92b6d8a484ba284d271d09bd0f5";
+
+    const weatherResponse = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`
+    );
+    const temperature = weatherResponse.data.main.temp;
+
     res.send({
       client_ip: location.ip,
-      location: location.country,
-      greeting: `Hello ${visitor_name}!, The temperature is 11 degrees Celcius in ${location.country}`,
+      location: country,
+      greeting: `Hello ${visitor_name}!, The temperature is ${temperature} degrees Celcius in ${city}`,
     });
   } catch (error) {
-    res.status(500).json({ error: "Error fetching location data" });
+    console.error("Error fetching location or weather data:", error);
+    res.status(500).json({ error: "Error fetching location or weather data" });
   }
 });
 
