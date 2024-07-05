@@ -4,6 +4,9 @@ const cors = require("cors");
 
 const app = express();
 const port = 5050;
+
+app.set("trust proxy", true);
+
 app.use(cors());
 
 app.use((req, res, next) => {
@@ -21,10 +24,23 @@ app.use((req, res, next) => {
 
 app.get("/api/hello", async (req, res) => {
   const { visitor_name } = req.query;
+  const clientIP =
+    req.headers["cf-connecting-ip"] ||
+    req.headers["x-real-ip"] ||
+    req.ip ||
+    req.headers["x-forwarded-for"] ||
+    req.socket.remoteAddress ||
+    "Unknown";
+
+  console.log("Client IP:", clientIP);
+  const ip =
+    req.headers["x-forwarded-for"] ||
+    (req.connection && req.connection.remoteAddress) ||
+    "";
+
+  console.log(clientIP);
 
   try {
-    const ipResponse = await axios.get("https://api.ipify.org?format=json");
-    const clientIP = ipResponse.data.ip;
     const response = await axios.get(
       `https://ipinfo.io/json?token=1ace4c41de19a3`
     );
@@ -46,7 +62,7 @@ app.get("/api/hello", async (req, res) => {
       greeting: `Hello ${visitor_name}!, The temperature is ${temperature} degrees Celcius in ${city}`,
     });
   } catch (error) {
-    console.error("Error fetching location or weather data:", error);
+    // console.error("Error fetching location or weather data:", error);
     res.status(500).json({ error: "Error fetching location or weather data" });
   }
 });
