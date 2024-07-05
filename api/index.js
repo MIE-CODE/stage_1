@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const app = express();
 const port = 5050;
-app.use(cors("*"));
+app.use(cors());
 
 app.use((req, res, next) => {
   const query = req.query;
