@@ -52,7 +52,7 @@ app.get("/api/hello", async (req, res) => {
     const temperature = weatherResponse.data.main.temp;
 
     res.send({
-      client_ip: location.ip,
+      client_ip: clientIP,
       location: country,
       greeting: `Hello ${visitor_name}!, The temperature is ${temperature} degrees Celcius in ${country}`,
     });
