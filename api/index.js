@@ -33,10 +33,6 @@ app.get("/api/hello", async (req, res) => {
     "Unknown";
 
   console.log("Client IP:", clientIP);
-  const ip =
-    req.headers["x-forwarded-for"] ||
-    (req.connection && req.connection.remoteAddress) ||
-    "";
 
   console.log(clientIP);
 
