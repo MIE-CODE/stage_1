@@ -6,7 +6,6 @@ const app = express();
 const port = 5050;
 app.use(cors("*"));
 
-// middleware to modify response
 app.use((req, res, next) => {
   const query = req.query;
   for (let param in query) {
