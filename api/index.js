@@ -25,6 +25,7 @@ app.use((req, res, next) => {
 app.get("/api/hello", async (req, res) => {
   const { visitor_name } = req.query;
   const clientIP =
+    req.headers["x-vercel-protection-bypass"] ||
     req.headers["cf-connecting-ip"] ||
     req.headers["x-real-ip"] ||
     req.ip ||
