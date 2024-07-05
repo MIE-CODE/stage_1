@@ -21,15 +21,16 @@ app.use((req, res, next) => {
 
 app.get("/api/hello", async (req, res) => {
   const { visitor_name } = req.query;
+
   try {
+    const ipResponse = await axios.get("https://api.ipify.org?format=json");
+    const clientIP = ipResponse.data.ip;
     const response = await axios.get(
       `https://ipinfo.io/json?token=1ace4c41de19a3`
     );
     const location = response.data;
 
-    const main_response = await axios.get(
-      `http://ip-api.com/json/${location.ip}`
-    );
+    const main_response = await axios.get(`http://ip-api.com/json/${clientIP}`);
     const { lat, lon, country, city } = main_response.data;
 
     const weatherApiKey = "9f66f92b6d8a484ba284d271d09bd0f5";
